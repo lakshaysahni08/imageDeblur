@@ -14,12 +14,14 @@ def variance_of_laplacian(image):
 	# can be used to detect blur
 	return cv2.Laplacian(image, cv2.CV_64F).var()
 
+
 # smoothens the image
 def smooth(image):
 	kernel = np.ones((5,5),np.float32)/25
 	#smooth = cv2.filter2d(image, -1, kernel)    // another way to smoothen the image
 	gaussian_blur = cv2.GaussianBlur(image,(5,5),0) 
 	cv2.imwrite("yo.png", gaussian_blur)
+
 
 # deblurs the image
 def deblur(image):
@@ -28,20 +30,15 @@ def deblur(image):
 	pic = conv2(pic, psf, 'same')
 	pic += 0.1 * pic.std() * np.random.standard_normal(pic.shape)
 	deconvolved, _ = restoration.unsupervised_wiener(pic, psf)
-
 	fig, ax = plt.subplots(nrows=1, ncols=2, figsize=(8, 5),
                        sharex=True, sharey=True)
-
 	plt.gray()
-
 	ax[0].imshow(pic, vmin=deconvolved.min(), vmax=deconvolved.max())
 	ax[0].axis('off')
 	ax[0].set_title('Data')
-
 	ax[1].imshow(deconvolved)
 	ax[1].axis('off')
 	ax[1].set_title('Self tuned restoration')
-
 	fig.tight_layout()
 	plt.show()
 	cv2.imwrite("yo.png", deconvolved)
